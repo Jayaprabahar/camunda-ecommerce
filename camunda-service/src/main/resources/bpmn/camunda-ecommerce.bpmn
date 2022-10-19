@@ -76,7 +76,7 @@
       <bpmn:incoming>Flow_1b5ma1z</bpmn:incoming>
       <bpmn:outgoing>Flow_0y3rt4w</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="Activity_ConfirmOrder" name="Confirm Order">
+    <bpmn:serviceTask id="Activity_ConfirmOrder" name="Confirm Item Availability">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="confirmOrder" retries="5" />
       </bpmn:extensionElements>
@@ -99,14 +99,21 @@
         <zeebe:taskDefinition type="emailNoStock" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1wy8aku</bpmn:incoming>
+      <bpmn:outgoing>Flow_0hh398g</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:boundaryEvent id="Event_1bd2kdb" attachedToRef="Activity_ConfirmOrder">
       <bpmn:outgoing>Flow_1wy8aku</bpmn:outgoing>
       <bpmn:errorEventDefinition id="ErrorEventDefinition_1s6xhcj" errorRef="Error_1y6jn1z" />
     </bpmn:boundaryEvent>
     <bpmn:sequenceFlow id="Flow_1wy8aku" sourceRef="Event_1bd2kdb" targetRef="Activity_0q3goza" />
+    <bpmn:sequenceFlow id="Flow_0hh398g" sourceRef="Activity_0q3goza" targetRef="Event_12g1xi4" />
+    <bpmn:endEvent id="Event_12g1xi4">
+      <bpmn:incoming>Flow_0hh398g</bpmn:incoming>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0funi0q" errorRef="Error_0f0d5e2" />
+    </bpmn:endEvent>
   </bpmn:process>
   <bpmn:error id="Error_1y6jn1z" name="errorDetail" errorCode="NO_STOCK" />
+  <bpmn:error id="Error_0f0d5e2" name="EMAIL_SERVER_DOWN" errorCode="EMAIL_SERVER_DOWN" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="order-delivery">
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
@@ -156,6 +163,9 @@
       <bpmndi:BPMNShape id="Activity_0i11mch_di" bpmnElement="Activity_0q3goza">
         <dc:Bounds x="290" y="290" width="100" height="80" />
         <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0ukxl7b_di" bpmnElement="Event_12g1xi4">
+        <dc:Bounds x="322" y="402" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0bq9a1l_di" bpmnElement="Event_1bd2kdb">
         <dc:Bounds x="322" y="229" width="36" height="36" />
@@ -215,6 +225,10 @@
       <bpmndi:BPMNEdge id="Flow_1wy8aku_di" bpmnElement="Flow_1wy8aku">
         <di:waypoint x="340" y="265" />
         <di:waypoint x="340" y="290" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0hh398g_di" bpmnElement="Flow_0hh398g">
+        <di:waypoint x="340" y="370" />
+        <di:waypoint x="340" y="402" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
