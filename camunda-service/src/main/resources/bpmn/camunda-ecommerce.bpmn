@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1u1lkk1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.4.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.1.0" camunda:diagramRelationId="b8d344f9-734d-40cc-89e3-cfc16797da09">
+  <bpmn:process id="order-delivery" name="eCommerce" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="Checkout from Website">
+      <bpmn:outgoing>Flow_Start</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_Start" sourceRef="StartEvent_1" targetRef="Activity_ConfirmOrder" />
+    <bpmn:sequenceFlow id="Flow_InformSeller" sourceRef="Activity_ConfirmOrder" targetRef="Activity_InformSeller" />
+    <bpmn:sequenceFlow id="Flow_Shipment" sourceRef="Activity_InformSeller" targetRef="Activity_MakeShipment" />
+    <bpmn:sequenceFlow id="Flow_CustomerReceiveItem" sourceRef="Activity_MakeShipment" targetRef="Activity_CustomerReceivedItem" />
+    <bpmn:sequenceFlow id="Flow_CheckReflectionPeriod" sourceRef="Activity_CustomerReceivedItem" targetRef="Gateway_ProductReturnReflectionPeriod" />
+    <bpmn:exclusiveGateway id="Gateway_ProductReturnReflectionPeriod" name="Product returned within Reflection Period">
+      <bpmn:incoming>Flow_CheckReflectionPeriod</bpmn:incoming>
+      <bpmn:outgoing>Flow_ProcessPayment</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1b5ma1z</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="Gateway_ProductReturnDefective" name="Is product returned in Good Condition">
+      <bpmn:incoming>Flow_0y3rt4w</bpmn:incoming>
+      <bpmn:outgoing>Flow_0l8hhld</bpmn:outgoing>
+      <bpmn:outgoing>Flow_18jruqn</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_ProcessPayment" name="No" sourceRef="Gateway_ProductReturnReflectionPeriod" targetRef="Activity_ProcessPayment">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=(isPurchaseDate - currentDate) &gt; 30</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0l8hhld" name="No" sourceRef="Gateway_ProductReturnDefective" targetRef="Activity_ReverseReturn">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=isProductInGoodCondition = false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_18jruqn" name="Yes" sourceRef="Gateway_ProductReturnDefective" targetRef="Activity_ReversePayment">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=isProductInGoodCondition</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="Activity_InformSeller" name="Inform Seller">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="informSeller" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_InformSeller</bpmn:incoming>
+      <bpmn:outgoing>Flow_Shipment</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_MakeShipment" name="Make a Shipment">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="makeShipment" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Shipment</bpmn:incoming>
+      <bpmn:outgoing>Flow_CustomerReceiveItem</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_ProcessPayment" name="Process Payment to Seller">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="paymentToSeller" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_ProcessPayment</bpmn:incoming>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_ReverseReturn" name="Reverse item Return to Customer">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="reverseReturn" />
+        <zeebe:ioMapping>
+          <zeebe:output source="=reverseReturn" target="emailType" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0l8hhld</bpmn:incoming>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_ReversePayment" name="Reverse Payment">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="reversePayment" />
+        <zeebe:ioMapping>
+          <zeebe:output source="=reversePayment" target="emailType" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_18jruqn</bpmn:incoming>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_ProductReturned" name="Product Returned">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="returnProduct" />
+        <zeebe:ioMapping>
+          <zeebe:output source="=isProductInGoodCondition" target="isProductInGoodCondition" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1b5ma1z</bpmn:incoming>
+      <bpmn:outgoing>Flow_0y3rt4w</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_ConfirmOrder" name="Confirm Order">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="confirmOrder" retries="5" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Start</bpmn:incoming>
+      <bpmn:outgoing>Flow_InformSeller</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_CustomerReceivedItem" name="Customer receives the items">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="customerReceiveItem" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_CustomerReceiveItem</bpmn:incoming>
+      <bpmn:outgoing>Flow_CheckReflectionPeriod</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1b5ma1z" name="Yes" sourceRef="Gateway_ProductReturnReflectionPeriod" targetRef="Activity_ProductReturned">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=(isPurchaseDate - currentDate) &lt;= 30</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0y3rt4w" sourceRef="Activity_ProductReturned" targetRef="Gateway_ProductReturnDefective" />
+    <bpmn:serviceTask id="Activity_0q3goza" name="Email Stock Unavailability">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="emailNoStock" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1wy8aku</bpmn:incoming>
+    </bpmn:serviceTask>
+    <bpmn:boundaryEvent id="Event_1bd2kdb" attachedToRef="Activity_ConfirmOrder">
+      <bpmn:outgoing>Flow_1wy8aku</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1s6xhcj" errorRef="Error_1y6jn1z" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_1wy8aku" sourceRef="Event_1bd2kdb" targetRef="Activity_0q3goza" />
+  </bpmn:process>
+  <bpmn:error id="Error_1y6jn1z" name="errorDetail" errorCode="NO_STOCK" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="order-delivery">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="172" y="189" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="155" y="232" width="72" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0re7hpp_di" bpmnElement="Gateway_ProductReturnReflectionPeriod" isMarkerVisible="true">
+        <dc:Bounds x="885" y="182" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="869" y="130" width="82" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1bn5835_di" bpmnElement="Gateway_ProductReturnDefective" isMarkerVisible="true">
+        <dc:Bounds x="1185" y="182" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1118" y="223" width="83" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1cag98d_di" bpmnElement="Activity_InformSeller">
+        <dc:Bounds x="443" y="167" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0vyig40_di" bpmnElement="Activity_MakeShipment">
+        <dc:Bounds x="590" y="167" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_16bsvh2_di" bpmnElement="Activity_ProcessPayment">
+        <dc:Bounds x="860" y="290" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_05a86ew_di" bpmnElement="Activity_ReverseReturn">
+        <dc:Bounds x="1330" y="167" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_16s3875_di" bpmnElement="Activity_ReversePayment">
+        <dc:Bounds x="1160" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1r8ivdl_di" bpmnElement="Activity_ProductReturned">
+        <dc:Bounds x="1010" y="167" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0uh75cx_di" bpmnElement="Activity_ConfirmOrder">
+        <dc:Bounds x="296" y="167" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1xs9cid_di" bpmnElement="Activity_CustomerReceivedItem">
+        <dc:Bounds x="732" y="167" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0i11mch_di" bpmnElement="Activity_0q3goza">
+        <dc:Bounds x="290" y="290" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0bq9a1l_di" bpmnElement="Event_1bd2kdb">
+        <dc:Bounds x="322" y="229" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1057jrm_di" bpmnElement="Flow_Start">
+        <di:waypoint x="208" y="207" />
+        <di:waypoint x="296" y="207" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0cj0b1b_di" bpmnElement="Flow_InformSeller">
+        <di:waypoint x="396" y="207" />
+        <di:waypoint x="443" y="207" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ryep3v_di" bpmnElement="Flow_Shipment">
+        <di:waypoint x="543" y="207" />
+        <di:waypoint x="590" y="207" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0d3pyns_di" bpmnElement="Flow_CustomerReceiveItem">
+        <di:waypoint x="690" y="207" />
+        <di:waypoint x="732" y="207" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0w0t5re_di" bpmnElement="Flow_CheckReflectionPeriod">
+        <di:waypoint x="832" y="207" />
+        <di:waypoint x="885" y="207" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0eg4lcx_di" bpmnElement="Flow_ProcessPayment">
+        <di:waypoint x="910" y="232" />
+        <di:waypoint x="910" y="290" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="914" y="236" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0l8hhld_di" bpmnElement="Flow_0l8hhld">
+        <di:waypoint x="1235" y="207" />
+        <di:waypoint x="1330" y="207" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1283" y="185" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_18jruqn_di" bpmnElement="Flow_18jruqn">
+        <di:waypoint x="1210" y="182" />
+        <di:waypoint x="1210" y="160" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1181" y="161" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1b5ma1z_di" bpmnElement="Flow_1b5ma1z">
+        <di:waypoint x="935" y="207" />
+        <di:waypoint x="1010" y="207" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="951" y="213" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0y3rt4w_di" bpmnElement="Flow_0y3rt4w">
+        <di:waypoint x="1110" y="207" />
+        <di:waypoint x="1185" y="207" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1wy8aku_di" bpmnElement="Flow_1wy8aku">
+        <di:waypoint x="340" y="265" />
+        <di:waypoint x="340" y="290" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

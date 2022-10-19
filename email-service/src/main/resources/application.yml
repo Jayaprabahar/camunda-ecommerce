@@ -1,0 +1,15 @@
+server:
+  port: 8083
+spring:
+  mail:
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: 'true'
+          auth: 'true'
+    host: smtp.gmail.com
+    username: jpofficial@gmail.com
+    password:
+    port: '587'
+

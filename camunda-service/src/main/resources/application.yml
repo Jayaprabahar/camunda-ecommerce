@@ -1,0 +1,16 @@
+server:
+  port: 8082
+
+zeebe:
+  client:
+    cloud:
+      cluster-id: 04e7c0d8-9501-4b67-87ff-572ac88d4607
+      client-secret: 1CJefTeF8XRGWgbLqnfpTPH.6MTkl3q3dgTEdVBz0auV_CVvZulXwRR_Tv.Z7fDv
+      client-id: X9HPZjircRQEYvElRJ2meTqcrBFRudYY
+      region: dsm-1
+
+# You can also configure the connection to a self-managed Zeebe broker:
+#    broker:
+#      gateway-address: 127.0.0.1:26500
+#    security:
+#      plaintext: 'true'
