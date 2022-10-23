@@ -24,16 +24,14 @@ public class EmailService {
     }
 
     public void sendEmail(EmailDto emailDto) {
-        String subject = String.format(switch (emailDto.getType()) {
+        sendEmail(emailDto.getEmailAddress(), String.format(switch (emailDto.getType()) {
             case ORDER_CONFIRM -> "Order id %s is Confirmed";
             case SHIPMENT_DETAIL -> "Order id %s is Shipped";
             case CUSTOMER_RECEIVED_ITEM -> "Customer received Order id %s";
             case PRODUCT_RETURNED -> "Customer returned Order id %s";
             case PRODUCT_RETURNED_DEFECTIVE -> "Item returned by customer as defective for Order id %s";
-            case NO_STOCK -> "Sorry! The item in your Order id %s soldout";
-        }, emailDto.getOrderId());
-
-        sendEmail(emailDto.getEmailAddress(), subject);
+            case NO_STOCK -> "Sorry! The item in your Order id %s sold out";
+        }, emailDto.getOrderId()));
     }
 
     public void sendEmail(String emailAddress, String content) {

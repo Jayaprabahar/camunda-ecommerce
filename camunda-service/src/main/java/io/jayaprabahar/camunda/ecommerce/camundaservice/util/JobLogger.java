@@ -12,7 +12,7 @@ public class JobLogger {
 
     public void logJob(final ActivatedJob job) {
         log.info(
-                "complete job\n>>> [type: {}, key: {}, element: {}, workflow instance: {}]\n{deadline; {}]\n[headers: {}]\n[variable parameter: {}",
+                "complete job>>> type: {}, key: {}, element: {}, workflow instance: {}, deadline; {}, headers: {}][variable parameter: {}",
                 job.getType(),
                 job.getKey(),
                 job.getElementId(),
