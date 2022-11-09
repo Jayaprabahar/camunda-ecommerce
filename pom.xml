@@ -5,13 +5,13 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.4</version>
+        <version>2.7.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <groupId>io.jayaprabahar.camunda.ecommerce</groupId>
     <artifactId>camunda-ecommerce-parent</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>ecommerce</name>
     <description>A simple Camunda microservice orchestration</description>
     <packaging>pom</packaging>
@@ -26,6 +26,9 @@
         <module>common</module>
         <module>email-service</module>
         <module>inventory-service</module>
+        <module>seller-notification-service</module>
+
+        <!-- Ideally place at last as camunda may requires other dependencies to be built at start -->
         <module>camunda-service</module>
     </modules>
 

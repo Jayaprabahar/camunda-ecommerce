@@ -43,4 +43,19 @@ public class WorkerHandler {
         }
     }
 
+    @JobWorker
+    public void informSeller(final ActivatedJob job) {
+        CustomLogger.logCamundaJob(job);
+
+        Map<String, Object> cartData = job.getVariablesAsMap();
+        String orderId = (String) ((List<?>) cartData.get("orderId")).get(0);
+        String emailAddress = (String) ((List<?>) cartData.get("email")).get(0);
+        String houseAddress = (String) ((List<?>) cartData.get("address")).get(0);
+        String shoppingAmount = (String) ((List<?>) cartData.get("amount")).get(0);
+        String buyerName = (String) ((List<?>) cartData.get("name")).get(0);
+        String productName = (String) ((List<?>) cartData.get("product")).get(0);
+
+        // Place the order file in Seller's AWS SQS queue
+    }
+
 }
