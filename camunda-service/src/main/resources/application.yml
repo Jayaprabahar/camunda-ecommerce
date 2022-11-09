@@ -4,10 +4,10 @@ server:
 zeebe:
   client:
     cloud:
-      cluster-id: 04e7c0d8-9501-4b67-87ff-572ac88d4607
-      client-secret: 1CJefTeF8XRGWgbLqnfpTPH.6MTkl3q3dgTEdVBz0auV_CVvZulXwRR_Tv.Z7fDv
-      client-id: X9HPZjircRQEYvElRJ2meTqcrBFRudYY
-      region: dsm-1
+      cluster-id: ${ZEEBE_CLUSTER_ID}
+      client-secret: ${ZEEBE_CLIENT_SECRET}
+      client-id: ${ZEEBE_CLIENT_ID}
+      region: ${ZEEBE_CLIENT_REGION}
 
 # You can also configure the connection to a self-managed Zeebe broker:
 #    broker:

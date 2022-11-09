@@ -3,7 +3,6 @@ package io.jayaprabahar.camunda.ecommerce.common;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -22,15 +21,12 @@ public class ECommerceWebClient {
     }
 
     private boolean getResponseCode(WebClient.ResponseSpec responseSpec) {
-        AtomicReference<ResponseEntity<Void>> httpStatusAtomicReference = new AtomicReference<>();
+        AtomicReference<HttpStatus> httpStatusAtomicReference = new AtomicReference<>();
 
         responseSpec
                 .toBodilessEntity()
-                .subscribe(
-                        httpStatusAtomicReference::set,
-                        errorConsumer -> log.error("Error making network call %s", errorConsumer)
-                );
+                .subscribe(e -> httpStatusAtomicReference.set(e.getStatusCode()));
 
-        return httpStatusAtomicReference.get() != null && httpStatusAtomicReference.get().getStatusCode() == HttpStatus.ACCEPTED;
+        return httpStatusAtomicReference.get() == HttpStatus.ACCEPTED;
     }
 }
