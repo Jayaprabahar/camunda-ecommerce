@@ -1,4 +1,4 @@
-package io.jayaprabahar.camunda.ecommerce.common;
+package io.jayaprabahar.camunda.ecommerce.common.util;
 
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;

@@ -1,6 +1,6 @@
 package io.jayaprabahar.camunda.ecommerce.emailservice.controller;
 
-import io.jayaprabahar.camunda.ecommerce.common.EmailDto;
+import io.jayaprabahar.camunda.ecommerce.common.dto.EmailDto;
 import io.jayaprabahar.camunda.ecommerce.emailservice.service.EmailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
