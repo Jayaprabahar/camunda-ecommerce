@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CartDataDto {
 
-    String orderId;
-    String email;
-    String address;
-    long amount;
-    String customerName;
-    String product;
+    String[] orderId;
+    String[] email;
+    String[] address;
+    String[] amount;
+    String[] name;
+    String[] product;
 
 }

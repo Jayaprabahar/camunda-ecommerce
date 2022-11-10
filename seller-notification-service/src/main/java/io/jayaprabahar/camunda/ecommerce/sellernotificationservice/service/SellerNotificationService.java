@@ -17,10 +17,11 @@ public class SellerNotificationService {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final SendMessageRequest.Builder SQS_MSG_BUILDER = SendMessageRequest.builder().queueUrl("https://sqs.eu-west-3.amazonaws.com/395189059856/camunda-ecommerce-order-queue");
 
-    public void sendMessage(CartDataDto cartDataDto) throws JsonProcessingException {
-        SendMessageRequest messageRequest = SQS_MSG_BUILDER.messageBody(OBJECT_MAPPER.writeValueAsString(cartDataDto))
-                .build();
+    public int sendMessage(CartDataDto cartDataDto) throws JsonProcessingException {
+        SendMessageRequest messageRequest = SQS_MSG_BUILDER.messageBody(OBJECT_MAPPER.writeValueAsString(cartDataDto)).build();
         SendMessageResponse sendMessageResponse = SQS_CLIENT.sendMessage(messageRequest);
+
         log.info("sendMessageResponse {}", sendMessageResponse);
+        return sendMessageResponse.sdkHttpResponse().statusCode();
     }
 }

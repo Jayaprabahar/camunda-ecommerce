@@ -49,17 +49,11 @@
       <bpmn:outgoing>Flow_1czxlpp</bpmn:outgoing>
       <bpmn:errorEventDefinition id="ErrorEventDefinition_1753wwr" errorRef="Error_08ym7ne" />
     </bpmn:boundaryEvent>
-    <bpmn:sequenceFlow id="Flow_1czxlpp" sourceRef="Event_SELLER_NOT_REACHABLE" targetRef="Activity_0dqduya" />
-    <bpmn:userTask id="Activity_0dqduya" name="Contact seller Manually">
-      <bpmn:incoming>Flow_1czxlpp</bpmn:incoming>
-      <bpmn:outgoing>Flow_0cdmxpq</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:sequenceFlow id="Flow_0cdmxpq" sourceRef="Activity_0dqduya" targetRef="Event_End" />
     <bpmn:endEvent id="Event_End" name="End">
-      <bpmn:incoming>Flow_0cdmxpq</bpmn:incoming>
       <bpmn:incoming>Flow_0je8kct</bpmn:incoming>
       <bpmn:incoming>Flow_16fbbs4</bpmn:incoming>
-      <bpmn:incoming>Flow_1ypszps</bpmn:incoming>
+      <bpmn:incoming>Flow_1gymam5</bpmn:incoming>
+      <bpmn:incoming>Flow_0cdmxpq</bpmn:incoming>
       <bpmn:terminateEventDefinition id="TerminateEventDefinition_09c82mh" />
     </bpmn:endEvent>
     <bpmn:boundaryEvent id="Event_SHIPMENT_API_ERROR" name="SHIPMENT_API_ERROR" attachedToRef="Activity_MakeShipment">
@@ -69,18 +63,16 @@
     <bpmn:sequenceFlow id="Flow_1m4znlb" sourceRef="Event_SHIPMENT_API_ERROR" targetRef="Activity_0b1k210" />
     <bpmn:sequenceFlow id="Flow_0je8kct" sourceRef="Event_EMAIL_SERVER_DOWN" targetRef="Event_End" />
     <bpmn:sequenceFlow id="Flow_16fbbs4" sourceRef="Activity_0b1k210" targetRef="Event_End" />
-    <bpmn:sequenceFlow id="Flow_1gymam5" sourceRef="Activity_MakeShipment" targetRef="Activity_EmailShipmentTime" />
-    <bpmn:sequenceFlow id="Flow_1ypszps" sourceRef="Activity_EmailShipmentTime" targetRef="Event_End" />
-    <bpmn:serviceTask id="Activity_EmailShipmentTime" name="Email Customer Shipment Time">
-      <bpmn:extensionElements>
-        <zeebe:taskDefinition type="emailShipmentTime" />
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_1gymam5</bpmn:incoming>
-      <bpmn:outgoing>Flow_1ypszps</bpmn:outgoing>
-    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1gymam5" sourceRef="Activity_MakeShipment" targetRef="Event_End" />
     <bpmn:userTask id="Activity_0b1k210" name="Make shipment Manually">
       <bpmn:incoming>Flow_1m4znlb</bpmn:incoming>
       <bpmn:outgoing>Flow_16fbbs4</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_1czxlpp" sourceRef="Event_SELLER_NOT_REACHABLE" targetRef="Activity_0dqduya" />
+    <bpmn:sequenceFlow id="Flow_0cdmxpq" sourceRef="Activity_0dqduya" targetRef="Event_End" />
+    <bpmn:userTask id="Activity_0dqduya" name="Contact seller Manually">
+      <bpmn:incoming>Flow_1czxlpp</bpmn:incoming>
+      <bpmn:outgoing>Flow_0cdmxpq</bpmn:outgoing>
     </bpmn:userTask>
   </bpmn:process>
   <bpmn:error id="Error_1y6jn1z" name="NO_STOCK" errorCode="NO_STOCK" />
@@ -111,21 +103,17 @@
         <dc:Bounds x="290" y="207" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0k220b8_di" bpmnElement="Activity_0dqduya">
-        <dc:Bounds x="465" y="206" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0yhrx6k_di" bpmnElement="Event_End">
         <dc:Bounds x="962" y="322" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="970" y="298" width="20" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0ypt2kg_di" bpmnElement="Activity_EmailShipmentTime">
-        <dc:Bounds x="860" y="77" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_104u8uw_di" bpmnElement="Activity_0b1k210">
         <dc:Bounds x="640" y="207" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_05anbci_di" bpmnElement="Activity_0dqduya">
+        <dc:Bounds x="465" y="206" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_00nw6n2_di" bpmnElement="Event_SHIPMENT_API_ERROR">
         <dc:Bounds x="672" y="139" width="36" height="36" />
@@ -190,12 +178,8 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1gymam5_di" bpmnElement="Flow_1gymam5">
         <di:waypoint x="740" y="117" />
-        <di:waypoint x="860" y="117" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1ypszps_di" bpmnElement="Flow_1ypszps">
-        <di:waypoint x="860" y="117" />
-        <di:waypoint x="824" y="117" />
-        <di:waypoint x="824" y="340" />
+        <di:waypoint x="851" y="117" />
+        <di:waypoint x="851" y="340" />
         <di:waypoint x="962" y="340" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
