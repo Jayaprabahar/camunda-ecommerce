@@ -9,6 +9,7 @@ import io.jayaprabahar.camunda.ecommerce.common.dto.CartDataDto;
 import io.jayaprabahar.camunda.ecommerce.common.dto.EmailDto;
 import io.jayaprabahar.camunda.ecommerce.common.util.ECommerceWebClient;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,9 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @SuppressWarnings("unused")
 public class WorkerHandler {
+
+    @Value("seller.mail-address")
+    String sellerMailAddress;
 
     @JobWorker
     public void confirmOrder(final ActivatedJob job) {
@@ -48,6 +52,18 @@ public class WorkerHandler {
         if (ECommerceWebClient.isPostResponseAccepted(ServiceDiscovery.SELLER_NOTIFICATION_SERVICE.getUrl(),
                 job.getVariablesAsType(CartDataDto.class)) != HttpStatus.OK) {
             CustomLogger.logAndThrowZeebeBpmnError(job.getKey(), "SELLER_NOTIFICATION_FAILED", "SELLER_NOTIFICATION_FAILED");
+        }
+    }
+
+    @JobWorker
+    public void emailServerDownError(final ActivatedJob job) {
+        CustomLogger.logCamundaJob(job);
+
+        String orderId = job.getVariablesAsType(CartDataDto.class).getOrderId()[0];
+
+        if (ECommerceWebClient.isPostResponseAccepted(ServiceDiscovery.EMAIL_SERVICE.getUrl(),
+                new EmailDto(orderId, sellerMailAddress, EmailType.EMAIL_SERVER_DOWN)) != HttpStatus.OK) {
+            CustomLogger.logAndThrowZeebeBpmnError(job.getKey(), "EMAIL_SERVER_DOWN", "EMAIL_SERVER_DOWN");
         }
     }
 

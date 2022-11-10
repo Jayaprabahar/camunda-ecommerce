@@ -9,6 +9,8 @@ zeebe:
       client-id: ${ZEEBE_CLIENT_ID}
       region: ${ZEEBE_CLIENT_REGION}
 
+seller:
+  mail-address: jpofficial@gmail.com
 # You can also configure the connection to a self-managed Zeebe broker:
 #    broker:
 #      gateway-address: 127.0.0.1:26500

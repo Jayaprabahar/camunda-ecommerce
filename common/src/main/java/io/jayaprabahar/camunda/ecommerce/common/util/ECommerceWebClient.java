@@ -22,8 +22,13 @@ public class ECommerceWebClient {
     }
 
     private HttpStatus getResponseCode(WebClient.ResponseSpec responseSpec) {
-        return Objects.requireNonNull(responseSpec
-                .toBodilessEntity()
-                .block(Duration.ofSeconds(30))).getStatusCode();
+        try {
+            return Objects.requireNonNull(responseSpec
+                    .toBodilessEntity()
+                    .block(Duration.ofSeconds(30))).getStatusCode();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        return HttpStatus.INTERNAL_SERVER_ERROR;
     }
 }

@@ -31,6 +31,7 @@ public class EmailService {
             case PRODUCT_RETURNED -> "Customer returned Order id %s";
             case PRODUCT_RETURNED_DEFECTIVE -> "Item returned by customer as defective for Order id %s";
             case NO_STOCK -> "Sorry! The item in your Order id %s sold out";
+            case EMAIL_SERVER_DOWN -> "Hi, Your server is down. Please contact us with Order id %s for the faster delivery";
         }, emailDto.getOrderId()));
     }
 

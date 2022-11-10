@@ -15,7 +15,8 @@ import software.amazon.awssdk.services.sqs.model.SendMessageResponse;
 public class SellerNotificationService {
     private static final SqsClient SQS_CLIENT = SqsClient.builder().region(Region.EU_WEST_3).build();
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    private static final SendMessageRequest.Builder SQS_MSG_BUILDER = SendMessageRequest.builder().queueUrl("https://sqs.eu-west-3.amazonaws.com/395189059856/camunda-ecommerce-order-queue");
+    private static final SendMessageRequest.Builder SQS_MSG_BUILDER = SendMessageRequest.builder()
+            .queueUrl("https://sqs.eu-west-3.amazonaws.com/395189059856/camunda-ecommerce-order-queue");
 
     public int sendMessage(CartDataDto cartDataDto) throws JsonProcessingException {
         SendMessageRequest messageRequest = SQS_MSG_BUILDER.messageBody(OBJECT_MAPPER.writeValueAsString(cartDataDto)).build();

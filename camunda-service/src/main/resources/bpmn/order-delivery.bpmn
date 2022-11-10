@@ -70,14 +70,17 @@
     </bpmn:userTask>
     <bpmn:sequenceFlow id="Flow_1czxlpp" sourceRef="Event_SELLER_NOT_REACHABLE" targetRef="Activity_0dqduya" />
     <bpmn:sequenceFlow id="Flow_0cdmxpq" sourceRef="Activity_0dqduya" targetRef="Event_End" />
-    <bpmn:userTask id="Activity_0dqduya" name="Contact seller Manually">
+    <bpmn:serviceTask id="Activity_0dqduya" name="Send mail instead">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="emailServerDownError" />
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_1czxlpp</bpmn:incoming>
       <bpmn:outgoing>Flow_0cdmxpq</bpmn:outgoing>
-    </bpmn:userTask>
+    </bpmn:serviceTask>
   </bpmn:process>
   <bpmn:error id="Error_1y6jn1z" name="NO_STOCK" errorCode="NO_STOCK" />
   <bpmn:error id="Error_0f0d5e2" name="EMAIL_SERVER_DOWN" errorCode="EMAIL_SERVER_DOWN" />
-  <bpmn:error id="Error_08ym7ne" name="SELLER_NOT_REACHABLE" errorCode="SELLER_NOT_REACHABLE" />
+  <bpmn:error id="Error_08ym7ne" name="SELLER_NOTIFICATION_FAILED" errorCode="SELLER_NOTIFICATION_FAILED" />
   <bpmn:error id="Error_1o8xnj0" name="SHIPMENT_API_ERROR" errorCode="SHIPMENT_API_ERROR" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="order-delivery">
@@ -112,8 +115,9 @@
       <bpmndi:BPMNShape id="Activity_104u8uw_di" bpmnElement="Activity_0b1k210">
         <dc:Bounds x="640" y="207" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_05anbci_di" bpmnElement="Activity_0dqduya">
+      <bpmndi:BPMNShape id="Activity_15ijciy_di" bpmnElement="Activity_0dqduya">
         <dc:Bounds x="465" y="206" width="100" height="80" />
+        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_00nw6n2_di" bpmnElement="Event_SHIPMENT_API_ERROR">
         <dc:Bounds x="672" y="139" width="36" height="36" />
@@ -152,15 +156,6 @@
         <di:waypoint x="340" y="175" />
         <di:waypoint x="340" y="207" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1czxlpp_di" bpmnElement="Flow_1czxlpp">
-        <di:waypoint x="515" y="175" />
-        <di:waypoint x="515" y="206" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0cdmxpq_di" bpmnElement="Flow_0cdmxpq">
-        <di:waypoint x="515" y="286" />
-        <di:waypoint x="515" y="340" />
-        <di:waypoint x="962" y="340" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1m4znlb_di" bpmnElement="Flow_1m4znlb">
         <di:waypoint x="690" y="175" />
         <di:waypoint x="690" y="207" />
@@ -180,6 +175,15 @@
         <di:waypoint x="740" y="117" />
         <di:waypoint x="851" y="117" />
         <di:waypoint x="851" y="340" />
+        <di:waypoint x="962" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1czxlpp_di" bpmnElement="Flow_1czxlpp">
+        <di:waypoint x="515" y="175" />
+        <di:waypoint x="515" y="206" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0cdmxpq_di" bpmnElement="Flow_0cdmxpq">
+        <di:waypoint x="515" y="286" />
+        <di:waypoint x="515" y="340" />
         <di:waypoint x="962" y="340" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
