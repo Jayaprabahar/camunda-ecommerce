@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @EnableZeebeClient
-@Deployment(resources = "classpath*:/bpmn/**/*.bpmn")
+@Deployment(resources = {"classpath*:/bpmn/**/*.bpmn", "classpath*:/form/**/*.form"})
 public class CamundaServiceApplication {
 
 	public static void main(String[] args) {

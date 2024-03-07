@@ -1,0 +1,121 @@
+{
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.4.0",
+  "exporter": {
+    "name": "Camunda Web Modeler",
+    "version": "3f1f641"
+  },
+  "schemaVersion": 15,
+  "id": "seller-contact-form",
+  "components": [
+    {
+      "text": "### Contact Seller",
+      "type": "text",
+      "id": "Heading_0",
+      "layout": {
+        "row": "row_0",
+        "columns": null
+      }
+    },
+    {
+      "type": "textfield",
+      "id": "Textfield_1",
+      "label": "Customer Name",
+      "validate": {
+        "minLength": 2,
+        "required": true
+      },
+      "key": "fullName",
+      "layout": {
+        "row": "row_1",
+        "columns": null
+      }
+    },
+    {
+      "type": "textfield",
+      "id": "Textfield_2",
+      "label": "Customer Email",
+      "validate": {
+        "minLength": 5,
+        "maxLength": 50,
+        "required": true
+      },
+      "key": "email",
+      "layout": {
+        "row": "row_1",
+        "columns": null
+      }
+    },
+    {
+      "type": "textfield",
+      "id": "Textfield_3",
+      "label": "Customer Phone Number",
+      "validate": {
+        "minLength": 10,
+        "maxLength": 15,
+        "required": true
+      },
+      "key": "phoneNumber",
+      "layout": {
+        "row": "row_2",
+        "columns": null
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "Textarea_4",
+      "label": "Message & items to be delivered",
+      "validate": {
+        "minLength": 10,
+        "maxLength": 500,
+        "required": true
+      },
+      "key": "message",
+      "layout": {
+        "row": "row_3",
+        "columns": null
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "Checkbox_5",
+      "label": "Sent Confirmation",
+      "defaultValue": false,
+      "validate": {
+        "required": true
+      },
+      "key": "subscribeToNewsletter",
+      "layout": {
+        "row": "row_4",
+        "columns": null
+      }
+    },
+    {
+      "subtype": "date",
+      "dateLabel": "Delivery Due Date",
+      "label": "Date time",
+      "type": "datetime",
+      "layout": {
+        "row": "row_5",
+        "columns": null
+      },
+      "id": "Field_0lz6zxx",
+      "key": "datetime_52k0u",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "action": "submit",
+      "type": "button",
+      "id": "Button_6",
+      "label": "Submit",
+      "layout": {
+        "row": "Row_1xhqxm7",
+        "columns": null
+      }
+    }
+  ],
+  "generated": true,
+  "type": "default"
+}

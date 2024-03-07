@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>io.jayaprabahar.camunda.ecommerce</groupId>
 		<artifactId>camunda-ecommerce-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.0.0</version>
 	</parent>
 
 	<artifactId>common</artifactId>

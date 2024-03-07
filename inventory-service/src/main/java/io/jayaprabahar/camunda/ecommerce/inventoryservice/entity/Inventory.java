@@ -1,9 +1,6 @@
 package io.jayaprabahar.camunda.ecommerce.inventoryservice.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -13,6 +10,7 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class Inventory {
 
     @Id String itemName;

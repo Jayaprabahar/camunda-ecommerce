@@ -17,7 +17,7 @@ public class CamundaService {
 
     public void initiateOrderFlow(MultiValueMap<String, String> cartData) {
         zeebeClient.newCreateInstanceCommand()
-                .bpmnProcessId("order-delivery")
+                .bpmnProcessId("order-delivery-enhanced")
                 .latestVersion()
                 .variables(cartData)
                 .send().join();
