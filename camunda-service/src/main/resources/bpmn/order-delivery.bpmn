@@ -1,19 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1u1lkk1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.4.2" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.1.0" camunda:diagramRelationId="b8d344f9-734d-40cc-89e3-cfc16797da09">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1u1lkk1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Web Modeler" exporterVersion="c2ec34f" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.1.0" camunda:diagramRelationId="b8d344f9-734d-40cc-89e3-cfc16797da09">
   <bpmn:process id="order-delivery" name="eCommerce" isExecutable="true">
     <bpmn:startEvent id="StartEvent_CheckOut" name="Checkout from Website">
       <bpmn:outgoing>Flow_Start</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="Flow_Start" sourceRef="StartEvent_CheckOut" targetRef="Activity_ConfirmOrder" />
     <bpmn:sequenceFlow id="Flow_InformSeller" sourceRef="Activity_ConfirmOrder" targetRef="Activity_InformSeller" />
-    <bpmn:serviceTask id="Activity_MakeShipment" name="Call Shipment API for Item Pickup">
-      <bpmn:documentation>This element should make a Shipment API call to collect shipment from Seller for delivery</bpmn:documentation>
-      <bpmn:extensionElements>
-        <zeebe:taskDefinition type="makeShipment" retries="3" />
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_Shipment</bpmn:incoming>
-      <bpmn:outgoing>Flow_1gymam5</bpmn:outgoing>
-    </bpmn:serviceTask>
     <bpmn:serviceTask id="Activity_ConfirmOrder" name="Confirm Item Availability">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="confirmOrder" retries="5" />
@@ -31,9 +23,8 @@
         <zeebe:taskDefinition type="informSeller" retries="5" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_InformSeller</bpmn:incoming>
-      <bpmn:outgoing>Flow_Shipment</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0dp185e</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="Flow_Shipment" sourceRef="Activity_InformSeller" targetRef="Activity_MakeShipment" />
     <bpmn:sequenceFlow id="Flow_1s3fphp" sourceRef="Event_NO_STOCK" targetRef="Activity_NO_STOCK" />
     <bpmn:serviceTask id="Activity_NO_STOCK" name="Email Customer NO_STOCK">
       <bpmn:extensionElements>
@@ -52,20 +43,16 @@
     <bpmn:endEvent id="Event_End" name="End">
       <bpmn:incoming>Flow_0je8kct</bpmn:incoming>
       <bpmn:incoming>Flow_16fbbs4</bpmn:incoming>
-      <bpmn:incoming>Flow_1gymam5</bpmn:incoming>
       <bpmn:incoming>Flow_0cdmxpq</bpmn:incoming>
       <bpmn:terminateEventDefinition id="TerminateEventDefinition_09c82mh" />
     </bpmn:endEvent>
-    <bpmn:boundaryEvent id="Event_SHIPMENT_API_ERROR" name="SHIPMENT_API_ERROR" attachedToRef="Activity_MakeShipment">
-      <bpmn:outgoing>Flow_1m4znlb</bpmn:outgoing>
-      <bpmn:errorEventDefinition id="ErrorEventDefinition_1q5ok8s" errorRef="Error_1o8xnj0" />
-    </bpmn:boundaryEvent>
-    <bpmn:sequenceFlow id="Flow_1m4znlb" sourceRef="Event_SHIPMENT_API_ERROR" targetRef="Activity_0b1k210" />
     <bpmn:sequenceFlow id="Flow_0je8kct" sourceRef="Event_EMAIL_SERVER_DOWN" targetRef="Event_End" />
     <bpmn:sequenceFlow id="Flow_16fbbs4" sourceRef="Activity_0b1k210" targetRef="Event_End" />
-    <bpmn:sequenceFlow id="Flow_1gymam5" sourceRef="Activity_MakeShipment" targetRef="Event_End" />
     <bpmn:userTask id="Activity_0b1k210" name="Make shipment Manually">
-      <bpmn:incoming>Flow_1m4znlb</bpmn:incoming>
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formId="Form_0owphbv" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0dp185e</bpmn:incoming>
       <bpmn:outgoing>Flow_16fbbs4</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="Flow_1czxlpp" sourceRef="Event_SELLER_NOT_REACHABLE" targetRef="Activity_0dqduya" />
@@ -77,6 +64,7 @@
       <bpmn:incoming>Flow_1czxlpp</bpmn:incoming>
       <bpmn:outgoing>Flow_0cdmxpq</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0dp185e" sourceRef="Activity_InformSeller" targetRef="Activity_0b1k210" />
   </bpmn:process>
   <bpmn:error id="Error_1y6jn1z" name="NO_STOCK" errorCode="NO_STOCK" />
   <bpmn:error id="Error_0f0d5e2" name="EMAIL_SERVER_DOWN" errorCode="EMAIL_SERVER_DOWN" />
@@ -89,10 +77,6 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="155" y="142" width="72" height="27" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0vyig40_di" bpmnElement="Activity_MakeShipment">
-        <dc:Bounds x="640" y="77" width="100" height="80" />
-        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0uh75cx_di" bpmnElement="Activity_ConfirmOrder">
         <dc:Bounds x="296" y="77" width="100" height="80" />
@@ -112,18 +96,12 @@
           <dc:Bounds x="970" y="298" width="20" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_104u8uw_di" bpmnElement="Activity_0b1k210">
-        <dc:Bounds x="640" y="207" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_15ijciy_di" bpmnElement="Activity_0dqduya">
         <dc:Bounds x="465" y="206" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_00nw6n2_di" bpmnElement="Event_SHIPMENT_API_ERROR">
-        <dc:Bounds x="672" y="139" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="709" y="166" width="81" height="27" />
-        </bpmndi:BPMNLabel>
+      <bpmndi:BPMNShape id="Activity_104u8uw_di" bpmnElement="Activity_0b1k210">
+        <dc:Bounds x="670" y="77" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0c6yahr_di" bpmnElement="Event_SELLER_NOT_REACHABLE">
         <dc:Bounds x="497" y="139" width="36" height="36" />
@@ -148,17 +126,9 @@
         <di:waypoint x="396" y="117" />
         <di:waypoint x="468" y="117" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1ryep3v_di" bpmnElement="Flow_Shipment">
-        <di:waypoint x="568" y="117" />
-        <di:waypoint x="640" y="117" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1s3fphp_di" bpmnElement="Flow_1s3fphp">
         <di:waypoint x="340" y="175" />
         <di:waypoint x="340" y="207" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1m4znlb_di" bpmnElement="Flow_1m4znlb">
-        <di:waypoint x="690" y="175" />
-        <di:waypoint x="690" y="207" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0je8kct_di" bpmnElement="Flow_0je8kct">
         <di:waypoint x="340" y="305" />
@@ -166,15 +136,9 @@
         <di:waypoint x="962" y="340" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_16fbbs4_di" bpmnElement="Flow_16fbbs4">
-        <di:waypoint x="740" y="247" />
-        <di:waypoint x="811" y="247" />
+        <di:waypoint x="770" y="117" />
+        <di:waypoint x="811" y="117" />
         <di:waypoint x="811" y="340" />
-        <di:waypoint x="962" y="340" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1gymam5_di" bpmnElement="Flow_1gymam5">
-        <di:waypoint x="740" y="117" />
-        <di:waypoint x="851" y="117" />
-        <di:waypoint x="851" y="340" />
         <di:waypoint x="962" y="340" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1czxlpp_di" bpmnElement="Flow_1czxlpp">
@@ -185,6 +149,10 @@
         <di:waypoint x="515" y="286" />
         <di:waypoint x="515" y="340" />
         <di:waypoint x="962" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0dp185e_di" bpmnElement="Flow_0dp185e">
+        <di:waypoint x="568" y="117" />
+        <di:waypoint x="670" y="117" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

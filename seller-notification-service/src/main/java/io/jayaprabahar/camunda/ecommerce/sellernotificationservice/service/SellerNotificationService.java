@@ -1,28 +1,41 @@
 package io.jayaprabahar.camunda.ecommerce.sellernotificationservice.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jayaprabahar.camunda.ecommerce.common.dto.CartDataDto;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.sqs.SqsClient;
-import software.amazon.awssdk.services.sqs.model.SendMessageRequest;
-import software.amazon.awssdk.services.sqs.model.SendMessageResponse;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
 
 @Service
 @Slf4j
 public class SellerNotificationService {
-    private static final SqsClient SQS_CLIENT = SqsClient.builder().region(Region.EU_WEST_3).build();
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    private static final SendMessageRequest.Builder SQS_MSG_BUILDER = SendMessageRequest.builder()
-            .queueUrl("https://sqs.eu-west-3.amazonaws.com/395189059856/camunda-ecommerce-order-queue");
 
-    public int sendMessage(CartDataDto cartDataDto) throws JsonProcessingException {
-        SendMessageRequest messageRequest = SQS_MSG_BUILDER.messageBody(OBJECT_MAPPER.writeValueAsString(cartDataDto)).build();
-        SendMessageResponse sendMessageResponse = SQS_CLIENT.sendMessage(messageRequest);
+    @Autowired
+    private AmazonS3 amazonS3;
 
-        log.info("sendMessageResponse {}", sendMessageResponse);
-        return sendMessageResponse.sdkHttpResponse().statusCode();
+    @Value("${aws.bucket}")
+    private String s3BucketName;
+
+    public void sendMessage(CartDataDto cartDataDto) throws IOException {
+        final File file = new File(cartDataDto.getOrderId()[0] + "-"+ System.currentTimeMillis()+".json") ;
+
+        try(final FileWriter fileWriter = new FileWriter(file)){
+            fileWriter.write(OBJECT_MAPPER.writeValueAsString(cartDataDto));
+            fileWriter.close();
+            log.info("Uploaded file with name {}", file.getName());
+
+            final PutObjectRequest putObjectRequest = new PutObjectRequest(s3BucketName, file.getName(), file);
+            amazonS3.putObject(putObjectRequest);
+            Files.delete(file.toPath());
+        }
     }
 }

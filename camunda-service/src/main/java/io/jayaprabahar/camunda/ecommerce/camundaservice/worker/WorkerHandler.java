@@ -50,13 +50,25 @@ public class WorkerHandler {
 
         // Place the order file in Seller's AWS SQS queue
         if (ECommerceWebClient.isPostResponseAccepted(ServiceDiscovery.SELLER_NOTIFICATION_SERVICE.getUrl(),
-                job.getVariablesAsType(CartDataDto.class)) != HttpStatus.OK) {
+                job.getVariablesAsType(CartDataDto.class)) != HttpStatus.ACCEPTED) {
             CustomLogger.logAndThrowZeebeBpmnError(job.getKey(), "SELLER_NOTIFICATION_FAILED", "SELLER_NOTIFICATION_FAILED");
         }
     }
 
     @JobWorker
     public void emailServerDownError(final ActivatedJob job) {
+        CustomLogger.logCamundaJob(job);
+
+        String orderId = job.getVariablesAsType(CartDataDto.class).getOrderId()[0];
+
+        if (ECommerceWebClient.isPostResponseAccepted(ServiceDiscovery.EMAIL_SERVICE.getUrl(),
+                new EmailDto(orderId, sellerMailAddress, EmailType.EMAIL_SERVER_DOWN)) != HttpStatus.OK) {
+            CustomLogger.logAndThrowZeebeBpmnError(job.getKey(), "EMAIL_SERVER_DOWN", "EMAIL_SERVER_DOWN");
+        }
+    }
+
+    @JobWorker
+    public void makeShipment(final ActivatedJob job) {
         CustomLogger.logCamundaJob(job);
 
         String orderId = job.getVariablesAsType(CartDataDto.class).getOrderId()[0];

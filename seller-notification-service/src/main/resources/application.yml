@@ -1,2 +1,7 @@
 server:
   port: 8085
+
+aws.access_key_id: ${AWS_ACCESS_KEY}
+aws.secret_access_key: ${AWS_SECRET_KEY}
+aws.region: ${AWS_REGION}
+aws.bucket: ${AWS_S3_BUCKET_NAME}

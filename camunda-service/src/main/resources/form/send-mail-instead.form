@@ -1,0 +1,26 @@
+{
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.4.0",
+  "exporter": {
+    "name": "Camunda Web Modeler",
+    "version": "c2ec34f"
+  },
+  "schemaVersion": 15,
+  "id": "send-mail-instead-0vsc7vc",
+  "components": [
+    {
+      "label": "ManuallyCalled",
+      "type": "checkbox",
+      "layout": {
+        "row": "Row_1xiklbc",
+        "columns": null
+      },
+      "id": "Field_1otcbfb",
+      "key": "checkbox_r806fo",
+      "validate": {
+        "required": true
+      }
+    }
+  ],
+  "type": "default"
+}

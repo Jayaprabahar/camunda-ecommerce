@@ -1,0 +1,37 @@
+{
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.4.0",
+  "exporter": {
+    "name": "Camunda Web Modeler",
+    "version": "c2ec34f"
+  },
+  "schemaVersion": 15,
+  "id": "Form_0owphbv",
+  "components": [
+    {
+      "label": "Yes, I made manual Shipment",
+      "type": "checkbox",
+      "layout": {
+        "row": "Row_01ftenw",
+        "columns": null
+      },
+      "id": "Field_1399rnp",
+      "key": "checkbox_confirmShipment",
+      "readonly": false,
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "action": "submit",
+      "label": "Approve",
+      "type": "button",
+      "layout": {
+        "row": "Row_00uywif",
+        "columns": null
+      },
+      "id": "Field_1ihb04a"
+    }
+  ],
+  "type": "default"
+}
